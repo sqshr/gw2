@@ -24,12 +24,16 @@ iplist = open(args.ips).read().splitlines()
 ipdict = {}
 for ip in iplist:
     arp_request = scapy.ARP( pdst = ip )
-    response = scapy.sr1( arp_request, timeout=0.2 )
+    try:
+        response = scapy.sr1( arp_request, timeout=0.2 )
+    except:
+        logging.critical(f"Error sending arp request. Do you have permission?")
+        exit(1)
     if response:
         mac = response.hwsrc
         ipdict[ip] = mac
     if not response:
-        logging.warning(f"MAC address for "+ip+" not obtainable")
+        logging.error(f"MAC address for "+ip+" not obtainable")
 
 #Array of routing IPs:
 routers=[]
