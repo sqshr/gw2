@@ -1,6 +1,8 @@
 #!/usr/bin/python
 
-import sys,os,argparse,string,netifaces,scapy.all as scapy
+import sys,os,argparse,string,netifaces,logging
+logging.getLogger("scapy.runtime").setLevel(logging.CRITICAL)
+import scapy.all as scapy
 
 parser = argparse.ArgumentParser(description='This tool tries to find gateways present on a local LAN')
 parser.add_argument('-i', '--ip', default='8.8.8.8', help='The IP address to try and reach')
@@ -18,8 +20,6 @@ source_mac = netifaces.ifaddresses(args.interface)[netifaces.AF_LINK][0]['addr']
 #Creates a list from the MAC address file
 iplist = open(args.ips).read().splitlines()
 
-#TODO: needs to validate IP addresses
-
 #Get MAC address for each IP
 ipdict = {}
 for ip in iplist:
@@ -28,6 +28,8 @@ for ip in iplist:
     if response:
         mac = response.hwsrc
         ipdict[ip] = mac
+    if not response:
+        print("ERROR: No MAC address found for "+ip)
 
 #Array of routing IPs:
 routers=[]
@@ -43,7 +45,6 @@ for ip in ipdict:
     ip = scapy.IP( src=source_ip , dst=args.ip, ttl=1 )
     syn_packet = scapy.TCP(sport=1500, dport=80, flags="S" )
     synack_reply = scapy.srp1(ether/ip/syn_packet, timeout=1 )
-    print("SYN via "+router_ip)
     if synack_reply:
         #for p in synack_reply:
         #    a = p.show(dump=True)
