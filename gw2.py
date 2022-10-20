@@ -45,10 +45,10 @@ for ip in ipdict:
     synack_reply = scapy.srp1(ether/ip/syn_packet, timeout=1 )
     print("SYN via "+router_ip)
     if synack_reply:
-        for p in synack_reply:
-            a = p.show(dump=True)
-            print(type(a))
-            print(a)
+        #for p in synack_reply:
+        #    a = p.show(dump=True)
+        #    print(type(a))
+        #    print(a)
         if synack_reply.haslayer("ICMP") and synack_reply["ICMP"].type == 11 and synack_reply["ICMP"].code == 0:
             if router_ip not in routers:
                 routers.append(router_ip)
