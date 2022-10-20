@@ -29,7 +29,7 @@ for ip in iplist:
         mac = response.hwsrc
         ipdict[ip] = mac
     if not response:
-        print("ERROR: No MAC address found for "+ip)
+        logging.warning(f"MAC address for "+ip+" not obtainable")
 
 #Array of routing IPs:
 routers=[]
@@ -67,5 +67,6 @@ for ip in ipdict:
         #    print(a)
         isrouter(ping_reply)
 
+#Prints out any routers found
 for ip in routers:
     print(ip)
