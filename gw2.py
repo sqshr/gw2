@@ -14,7 +14,6 @@ scapy.conf.verb = 0
 #Gets source IP from selected interface
 source_ip = netifaces.ifaddresses(args.interface)[netifaces.AF_INET][0]['addr']
 source_mac = netifaces.ifaddresses(args.interface)[netifaces.AF_LINK][0]['addr']
-source_mac = netifaces.ifaddresses(args.interface)[netifaces.AF_LINK][0]['addr']
 
 #Creates a list from the MAC address file
 iplist = open(args.ips).read().splitlines()
